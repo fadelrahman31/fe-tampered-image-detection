@@ -162,6 +162,8 @@ export default {
             console.log(data);
 
             // Add Params Attribut for Push Page
+            // DON'T FORGET TO CHANGE THIS URL
+
             let url = new URL("http://localhost:3000")
             let params = new URLSearchParams(url.search)
 
