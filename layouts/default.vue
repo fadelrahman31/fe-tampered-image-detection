@@ -8,7 +8,8 @@
         elevate-on-scroll
         dark
       >
-          <v-toolbar-title>
+          <v-toolbar-title
+          >
               <b>Image Tampered Detector System</b> v1.0 
           </v-toolbar-title>
       </v-app-bar>

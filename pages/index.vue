@@ -3,7 +3,7 @@
     <v-container>
         <v-layout justify-center align-center>
             <v-container fluid>
-                <h1>Selamat datang!</h1>
+                <h1>Sistem Rekomendasi <i>Tampered Image Detector</i></h1>
                 <p>Masukkan gambar KTP yang hendak diperiksa oleh sistem! </p>
                 <v-row
                     justify="center"
@@ -103,7 +103,10 @@ export default {
             v => (v && v.length <= 100) || 'Alamat must be less than 100 characters'
         ],
         gambarKTP: null,
-        preview: null
+        preview: null,
+        message: '',
+        prediction: '',
+        probability: '',
     }),
     methods: {
         importImg() {
@@ -127,20 +130,6 @@ export default {
 
             //console.log(file)
         },
-        replaceStr (){
-            let a = this.fasilitas0
-            let b = JSON.stringify(a)
-            b = b.replace(/"/g,"'")
-            this.fasilitas = b
-        },
-        generateID (len, arr){
-            var ans = ''
-            for (var i = len; i>0; i-- ){
-                ans +=
-                    arr[Math.floor(Math.random()* arr.length)]
-            }
-            return ans
-        },
         submitForm () {
             //this.$axios.post('',)
             // this.replaceStr()
@@ -159,6 +148,7 @@ export default {
             formData.append('model', 'v2')
             formData.append('img', this.gambarKTP)
             const data = [...formData.entries()]
+            console.log("=== INI DARI PAGE INDEX ===")
             console.log(data);
 
             // Add Params Attribut for Push Page
@@ -169,10 +159,13 @@ export default {
 
             params.set('uid', this.noKtp)
             params.set('email', this.email)
+            params.set('msg', this.message)
+            params.set('pred', this.prediction)
+            params.set('prob', this.probability)
             console.log(params.toString())
             
-            console.log(params.get('email'))
-            console.log(params.get('uid'))
+            // console.log(params.get('email'))
+            // console.log(params.get('uid'))
 
             this.$router.push({
                   path: '/detection?' + params.toString()

@@ -6,7 +6,7 @@ export default {
 
   // Global page headers (https://go.nuxtjs.dev/config-head)
   head: {
-    titleTemplate: '%s - frontend-dss',
+    titleTemplate: 'Home - Image Tampered Detector System',
     title: 'frontend-dss',
     meta: [
       { charset: 'utf-8' },
