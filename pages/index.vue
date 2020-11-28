@@ -45,6 +45,7 @@
                                   show-size
                                   truncate-length="25"
                                   v-model="gambarKTP"
+                                  :rules="rulesGambarKTP"
                                 ></v-file-input>
                             </v-form>
                         </v-card>
@@ -53,6 +54,7 @@
                             class="ma-3"
                             @click="submitForm"
                             :loading="submitting"
+                            :disabled= "!valid"
                         >detect now</v-btn>
                         <v-btn
                             class="ma-3"
@@ -103,6 +105,9 @@ export default {
             v => (v && v.length <= 100) || 'Alamat must be less than 100 characters'
         ],
         gambarKTP: null,
+        rulesGambarKTP: [
+            v => !!v
+        ],
         preview: null,
         message: '',
         prediction: '',
