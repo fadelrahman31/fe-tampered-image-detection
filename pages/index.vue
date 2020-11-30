@@ -38,6 +38,7 @@
                                     required
                                 ></v-text-field>
                                 <h3>Upload gambar KTP pengguna</h3>
+                                <!-- <input type="file" @change="onFileChanged"> -->
                                 <v-file-input
                                   accept="image/*"
                                   chips
@@ -60,6 +61,7 @@
                             class="ma-3"
                             color='grey'
                             @click="importImg"
+                            
                         >preview image</v-btn>
                     </v-col>
                     <v-spacer></v-spacer>
@@ -88,7 +90,7 @@
 
 <script>
 
-import axios from '@nuxtjs/axios'
+// import axios from '@nuxtjs/axios'
 
 export default {
     data: () => ({
@@ -112,12 +114,15 @@ export default {
         message: '',
         prediction: '',
         probability: '',
+      
     }),
     methods: {
+        onFileChanged (event) {
+            this.gambarKTP = event.target.files[0]
+        },
         importImg() {
             
             var preview = document.querySelector('img');
-            //const file = document.querySelector('input[type=file]').files[0];
             var file = this.gambarKTP;
             var reader = new FileReader();
             var a = null;
@@ -136,22 +141,12 @@ export default {
             //console.log(file)
         },
         submitForm () {
-            //this.$axios.post('',)
-            // this.replaceStr()
-            // let idKost = this.generateID(8,'12345abcdefxzpqi')
-            // var postQuery = {
-            //     id              : idKost,
-            //     nama            : this.nama,
-            //     alamat          : this.alamat,
-            //     fasilitas       : this.fasilitas,
-            //     harga           : this.harga,
-            //     gambar          : this.gambar
-            // }
-
 
             const formData = new FormData()
             formData.append('model', 'v2')
-            formData.append('img', this.gambarKTP)
+            formData.append('img', this.gambarKTP, this.gambarKTP.name)
+            //console.log(formData)
+
             const data = [...formData.entries()]
             console.log("=== INI DARI PAGE INDEX ===")
             console.log(data);
@@ -159,38 +154,38 @@ export default {
             // Add Params Attribut for Push Page
             // DON'T FORGET TO CHANGE THIS URL
 
-            let url = new URL("http://localhost:3000")
-            let params = new URLSearchParams(url.search)
-
-            params.set('uid', this.noKtp)
-            params.set('email', this.email)
-            params.set('msg', this.message)
-            params.set('pred', this.prediction)
-            params.set('prob', this.probability)
-            console.log(params.toString())
-            
-            // console.log(params.get('email'))
-            // console.log(params.get('uid'))
-
-            this.$router.push({
-                  path: '/detection?' + params.toString()
-                })
-
             //TODO : ADD RESPONSE STATUS FROM SERVER TO URL PARAMS
 
-            // this.submitting = true;
-            // this.$axios.post('/api/indekos/info',postQuery)
-            //   .then((response)=>{
-            //     this.$router.push({
-            //       path: '/'
-            //     })
-            //   })
-            //   .catch((e)=>{
-            //     console.error(e)
-            //   })
-            //   .finally(() => {
-            //     this.submitting = true;
-            //   })
+            this.submitting = true;
+            
+            this.$axios.$post('http://188.166.228.3/api/predictor', formData)
+              .then((response)=>{
+                    console.log(response)
+                    this.message = response['message']
+                    this.prediction = response['results']['prediction']
+                    this.probability = response['results']['probability']
+
+                    let params = new URLSearchParams()
+
+                    params.set('uid', this.noKtp)
+                    params.set('email', this.email)
+                    params.set('msg', this.message)
+                    params.set('pred', this.prediction)
+                    params.set('prob', this.probability)
+
+                    this.$router.push({
+                        path: '/detection?' + params.toString()
+                    })
+                    
+              })
+              .catch((e)=>{
+                  console.log("API Error")
+                  console.error(e)
+                  this.submitting=true
+              })
+              .finally(()=>{
+                  this.submitting=true
+              })
         }
     }
 }
