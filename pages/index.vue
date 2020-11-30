@@ -158,7 +158,7 @@ export default {
 
             this.submitting = true;
             
-            this.$axios.$post('https://188.166.228.3/api/predictor', formData)
+            this.$axios.$post('http://188.166.228.3/api/predictor', formData)
               .then((response)=>{
                     console.log(response)
                     this.message = response['message']
